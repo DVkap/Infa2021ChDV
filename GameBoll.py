@@ -32,7 +32,7 @@ screen = pygame.display.set_mode((X, Y))
 def new_ball():
     global N
     for i in range(N):
-        ball = {  'type': 'ball', 'x': randint(100,800), 'y': randint(100,500), 'vx': randint(-5,5), 'vy': randint(-5,5), 'radius': randint(30,50), 'color': COLORS[randint(0, 6)]}
+        ball = {  'type': 'ball', 'x': randint(100,800), 'y': randint(100,500), 'vx': randint(-25,25), 'vy': randint(-25,25), 'radius': randint(30,50), 'color': COLORS[randint(0, 6)]}
         balls.append(ball)
 
 #Рисование фигуры
