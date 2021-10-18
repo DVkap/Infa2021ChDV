@@ -4,7 +4,7 @@ from random import randint
 pygame.init()
 
 #Переменные
-FPS = 2
+FPS = 30
 X = 1000 #Ширина окна
 Y = 800 #Высота окна
 N = 3 #номер шарика
@@ -32,13 +32,19 @@ screen = pygame.display.set_mode((X, Y))
 def new_ball():
     global N
     for i in range(N):
-        ball = {  'type': 'ball', 'x': randint(100,800), 'y': randint(100,500), 'vx': 5, 'vy': 5, 'radius': randint(30,50), 'color': COLORS[randint(0, 6)]}
+        ball = {  'type': 'ball', 'x': randint(100,800), 'y': randint(100,500), 'vx': randint(-5,5), 'vy': randint(-5,5), 'radius': randint(30,50), 'color': COLORS[randint(0, 6)]}
         balls.append(ball)
 
 #Рисование фигуры
 def draw_ball():
     global N
     for i in range(N):
+        if not(0<balls[i]['x']-balls[i]['radius']<X-2*balls[i]['radius']):
+            balls[i]['vx']=-balls[i]['vx']
+        if not(0<balls[i]['y']-balls[i]['radius']<Y-2*balls[i]['radius']):
+            balls[i]['vy']=-balls[i]['vy']
+        balls[i]['x']+=balls[i]['vx']
+        balls[i]['y']+=balls[i]['vy']
         circle(screen, balls[i]['color'], (balls[i]['x'], balls[i]['y']),balls[i]['radius'])
 
 #Обработка нажатия
