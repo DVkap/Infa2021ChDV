@@ -2,7 +2,8 @@ import pygame
 from pygame.draw import *
 from random import randint
 pygame.init()
-
+"""Big red ball- появляется с самого начала для ускорения набора очов. Дальше каждых пять попаданий он будет появляться. Если игрок уходит
+в минус, ему нужно попасть так, чтоб счет стал равен пяти, тога появится бонусный шар, который даст возможность за один клик отиграть 11 очков"""
 #Переменные
 FPS = 30
 X = 1000 #Ширина окна
@@ -10,6 +11,7 @@ Y = 800 #Высота окна
 N = 3 #номер шарика
 score = 0 #счет
 flag = False #Флажок попадания
+Big = False #Флажек большого шара
 
 # Цвета используемые в игре
 WHITE = (255, 255, 255)
@@ -28,15 +30,24 @@ balls = []
 
 screen = pygame.display.set_mode((X, Y))
 
-#Создание кординат шарика
-def new_ball():
-    global N
-    for i in range(N):
-        ball = {  'type': 'ball', 'x': randint(100,800), 'y': randint(100,500), 'vx': randint(-25,25), 'vy': randint(-25,25), 'radius': randint(30,50), 'color': COLORS[randint(0, 6)]}
-        balls.append(ball)
 
-#Рисование фигуры
+def new_ball():
+    "Создание кординат шарика"
+    global N
+    if (score %5) == 0:
+        for i in range(1):
+            ball = {  'type': 'ball','x': randint(100,800),'y': randint(100,500),'vx': randint(-25,25),'vy': randint(-25,25),'radius': 100, 'color': COLORS[0]}
+            balls.append(ball)
+        for i in range(N):
+            ball = {  'type': 'ball','x': randint(100,800),'y': randint(100,500),'vx': randint(-25,25),'vy': randint(-25,25),'radius': randint(30,50), 'color': COLORS[randint(1, 6)]}
+            balls.append(ball)
+        else:
+            for i in range(N):
+                    ball = {  'type': 'ball','x': randint(100,800),'y': randint(100,500),'vx': randint(-25,25),'vy': randint(-25,25),'radius': randint(30,50), 'color': COLORS[randint(1, 6)]}
+                    balls.append(ball)
+
 def draw_ball():
+    "Рисование фигуры"
     global N
     for i in range(N):
         if not(0<balls[i]['x']-balls[i]['radius']<X-2*balls[i]['radius']):
@@ -47,9 +58,10 @@ def draw_ball():
         balls[i]['y']+=balls[i]['vy']
         circle(screen, balls[i]['color'], (balls[i]['x'], balls[i]['y']),balls[i]['radius'])
 
-#Обработка нажатия
+
 def click(points):
-    global score, N, flag
+    "Обработка нажатия "
+    global score, N, flag, Big
 
     for i in range(N):
         distance = (event.pos[0] - balls[i]['x'])**2 + (event.pos[1] - balls[i]['y'])**2
@@ -57,8 +69,14 @@ def click(points):
         if distance <= balls[i]['radius']**2:
             print('Попал!')
             flag = True
-            score = points + 1
-            change_ball(i)
+            if Big == True:
+                score = points + 11
+                change_ball(i)
+                Big = False
+            else:
+                score = points + 1
+                change_ball(i)
+
 
 
     if flag == False :
@@ -67,8 +85,19 @@ def click(points):
     print('Счет:', score)
     flag = False
 
+
 def change_ball(i):
-    balls[i] = {  'type': 'ball', 'x': randint(100,800), 'y': randint(100,500), 'vx': 5, 'vy': 5, 'radius': randint(30,50), 'color': COLORS[randint(0, 6)]}
+    "Изменение крдинат шарика"
+    global Big
+    if (score %5) == 0:
+       balls[1] = {  'type': 'ball','x': randint(100,800),'y': randint(100,500),'vx': randint(-25,25),'vy': randint(-25,25),'radius': 100, 'color': COLORS[0]}
+       Big = True
+    else:
+        balls[i] = {  'type': 'ball','x': randint(100,800),'y': randint(100,500),'vx': randint(-25,25),'vy': randint(-25,25),'radius': randint(30,50), 'color': COLORS[randint(1, 5)]}
+
+
+
+
 
 
 
